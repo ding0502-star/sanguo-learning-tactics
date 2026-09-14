@@ -141,15 +141,21 @@ func make_ui():
 	ui.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(ui)
 	texture_at(art.scroll,Rect2(15,6,515,127))
-	var title = label_at("三國小軍師",Vector2(80,34),Vector2(410,72),52)
+	var title = label_at("三國小軍師",Vector2(67,33),Vector2(411,72),52)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.add_theme_font_override("font",title_font)
 	title.add_theme_color_override("font_color",Color("392719"))
 	texture_at(art.scroll,Rect2(519,25,510,88))
-	var chapter = label_at("劉關張合作守村",Vector2(578,47),Vector2(395,45),30)
+	var chapter = label_at("劉關張合作守村",Vector2(576,46),Vector2(396,46),30)
+	chapter.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	chapter.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	chapter.add_theme_font_override("font",title_font)
 	chapter.add_theme_color_override("font_color",Color("493222"))
 	texture_at(art.scroll,Rect2(1062,18,346,92))
-	round_label = label_at("",Vector2(1114,42),Vector2(267,48),29)
+	round_label = label_at("",Vector2(1102,40),Vector2(266,48),29)
+	round_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	round_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	round_label.add_theme_color_override("font_color",Color("493222"))
 	button_at("重新開始",Vector2(1410,36),Vector2(155,56),restart)
 	var band = Panel.new()
