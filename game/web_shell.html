@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="data:,"><title>三國小軍師｜合作守村</title>
+<meta name="description" content="帶領 Q 版劉關張守護村莊，透過課業答題取得計策點。">
+$GODOT_HEAD_INCLUDE
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:#17281e;color:#fff2d8;font-family:system-ui,"Microsoft JhengHei",sans-serif;overflow:hidden}body{display:flex;flex-direction:column}header{height:42px;flex:none;background:#21392c;display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:14px;border-bottom:1px solid #af8b45}header span{opacity:.9}button{cursor:pointer;background:#f2db9b;color:#493421;border:1px solid #d0a852;border-radius:7px;padding:6px 15px;font:inherit;font-weight:600}button:hover{background:#ffedba}main{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center}canvas{display:block;width:100%;height:100%;outline:0;touch-action:none}#loading{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at top,#486443,#182d22 80%);z-index:2}.card{max-width:520px;width:90%;padding:30px;text-align:center;background:#f8efd5;color:#4a3422;border:5px solid #9a6b35;border-radius:20px;box-shadow:0 18px 70px #0005}.card h1{font-size:32px;margin:8px 0 18px}.card p{line-height:1.7}progress{width:100%;height:18px;accent-color:#497c4b}#retry{display:none;margin:auto}#notice{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#17281ee8;padding:9px 16px;border-radius:10px;font-size:13px;display:none;max-width:90%;text-align:center}#about{position:absolute;right:12px;top:10px;background:#fff4db;color:#4a3422;padding:18px;border-radius:12px;width:300px;z-index:4;box-shadow:0 8px 32px #0005;line-height:1.8}#about[hidden]{display:none}#about button{margin-top:10px}header .actions{display:flex;gap:8px}@media(max-width:600px){header{font-size:12px;padding:0 6px}.wide{display:none}.card h1{font-size:26px}}
+</style>
+</head>
+<body>
+<header><span>三國小軍師 <span class="wide"> · 合作守村</span></span><div class="actions"><button id="help" type="button">說明</button><button id="fullscreen" type="button">全螢幕</button></div></header>
+<main id="stage"><canvas id="canvas" aria-label="三國小軍師戰棋遊戲" tabindex="0">瀏覽器需要支援 WebGL 2 才能遊玩。</canvas>
+<div id="loading"><div class="card"><h1>三國小軍師</h1><p>劉關張合作守村</p><progress id="progress" max="1" value="0"></progress><p id="status" role="status">正在準備戰場……首次載入需要一些時間。</p><button id="retry" onclick="location.reload()">重新載入</button></div></div>
+<div id="notice" role="status"></div>
+<section id="about" hidden><strong>帶領劉關張守護村莊</strong><br>每回合答兩題，取得計策點。選擇武將後，可以移動、攻擊或使用技能。<br><br>學習紀錄存在此瀏覽器；清除網站資料或使用無痕模式，可能無法保留。電腦與橫向平板較適合操作。<br><button id="close-help">回到遊戲</button></section>
+</main>
+<script src="$GODOT_URL"></script>
+<script>
+const config=$GODOT_CONFIG;
+const engine=new Engine(config);
+const status=document.getElementById('status');
+const progress=document.getElementById('progress');
+const loading=document.getElementById('loading');
+const canvas=document.getElementById('canvas');
+const stage=document.getElementById('stage');
+function fitCanvas(){const r=stage.getBoundingClientRect();canvas.width=Math.max(1,Math.round(r.width));canvas.height=Math.max(1,Math.round(r.height));canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';}
+fitCanvas();new ResizeObserver(fitCanvas).observe(stage);
+window.gameBoot={ready:false,error:null};
+function fail(error){const message=error?.message||String(error);window.gameBoot.error=message;status.textContent='無法啟動遊戲：'+message;document.getElementById('retry').style.display='block';loading.style.display='grid';}
+const missing=Engine.getMissingFeatures({threads:$GODOT_THREADS_ENABLED});
+if(location.protocol==='file:'){fail('請使用「開啟網頁版.cmd」，或將整個資料夾放到網站後開啟。');}
+else if(missing.length){fail('目前瀏覽器缺少 '+missing.join('、')+'，請使用更新的 Chrome 或 Edge。');}
+else{engine.startGame({canvas,onProgress:(current,total)=>{if(total){progress.value=current/total;status.textContent='正在載入戰場 '+Math.round(current/total*100)+'%';}},onPrintError:(...args)=>console.error(...args)}).then(()=>{window.gameBoot.ready=true;loading.style.display='none';canvas.focus();}).catch(fail);}
+document.getElementById('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();canvas.focus();}catch{const n=document.getElementById('notice');n.textContent='此瀏覽器不支援全螢幕，可使用橫向畫面遊玩。';n.style.display='block';setTimeout(()=>n.style.display='none',4000);}};
+document.getElementById('help').onclick=()=>document.getElementById('about').hidden=false;
+document.getElementById('close-help').onclick=()=>{document.getElementById('about').hidden=true;canvas.focus();};
+</script>
+</body></html>
